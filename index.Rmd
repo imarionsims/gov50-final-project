@@ -1,7 +1,7 @@
 ---
 title: "Gov 50 Final Project"
 author: "Isa MarionSims"
-description: "My final project"
+description: "Does religion have an effect on politics?"
 output:
   distill::distill_article:
     self_contained: false
@@ -11,12 +11,14 @@ output:
 
 ## Introduction
 
-Does an individual’s religiousness affect their political ideology (on the spectrum between “left” and “right”)?  I hypothesize that, based on my knowledge of how the American political arena works, those who are more pious will tend more towards right-wing beliefs because the right is often understood as the more conservative party, and several religions espouse conservative practices as part of their belief systems; I am interested in understanding whether this pattern is, as I suspect, not just an American phenomenon.  To test this, I intend to use data from the most recent wave of the World Values Survey, where my unit of analysis will be an individual, and I am also particularly interested in seeing how/if those trends differ across different religions and/or nationalities as a secondary area of exploration.  My explanatory variable of interest is an individual’s self-professed level of religiosity as measured by this question: “Independently of whether you attend religious services or not, would you say you are…?,” where respondents can answer either “1) A religious person,” “2) Not a religious person,” or “3) An atheist.”  My outcome variable of interest is an individual’s self-placement on the spectrum of political ideology as measured by this question: “In political matters, people talk of "the left" and "the right."  How would you place your views on this scale, generally speaking?,” to which respondents code their answers on a scale from 1 to 10 where 1 is “Left” and 10 is “Right.”  The observation that would prove my hypothesis would be if the data suggested that individuals who indicated that they were more religious did in fact trend more towards the right end of the political spectrum; and alternatively, my findings would disprove my hypothesis if I observed a trend that showed that individuals who indicated that they were more religious did not tend more towards the right end of the political spectrum (either because there was a relatively even split or because they actually tended more towards the left).
+Does an individual’s religiousness affect their political ideology (on the spectrum between “left” and “right”)?  I hypothesize that, based on my knowledge of how the American political arena works, those who are more pious will tend more towards right-wing beliefs because the right is often understood as the more conservative party, and several religions espouse conservative practices as part of their belief systems; I am interested in understanding whether this pattern is, as I suspect, not just an American phenomenon.  To test this, I intend to use data from the most recent wave of the World Values Survey, where my unit of analysis will be an individual, and I am also particularly interested in seeing how/if those trends differ across different religions and/or nationalities as a secondary area of exploration.  The observation that would prove my hypothesis would be if the data suggested that individuals who indicated that they were more religious did in fact trend more towards the right end of the political spectrum; and alternatively, my findings would disprove my hypothesis if I observed a trend that showed that individuals who indicated that they were more religious did not tend more towards the right end of the political spectrum (either because there was a relatively even split or because they actually tended more towards the left).
+
 
 ## Data
 
-In analyzing this data, my research design is -------, meaning ------.  
+As mentioned above, the survey data I am using comes from the World Values Survey (WVS) Wave 7.  The WVS Wave 7 officially started in 2017 with most of the almost 88,000 (87,822) survey responses being collected and completed in 2018-2020, and it officially closed at the end of 2021 (though a few countries ended up having to conduct their surveys in early 2022 due to delays from the pandemic).  Each country only runs their surveys once per wave.  Countries used random probability representative samples of their adult populations, and the "vast majority" of surveys were administered by face-to-face interview (PAPI/CAPI - both pen-and-paper and computer-assisted personal interviews).
 
+My explanatory variable of interest is an individual’s self-professed level of religiosity as measured by Q173: “Independently of whether you attend religious services or not, would you say you are…?,” where respondents can answer either “1) A religious person,” “2) Not a religious person,” or “3) An atheist.”  My outcome variable of interest is an individual’s self-placement on the spectrum of political ideology as measured by Q240: “In political matters, people talk of "the left" and "the right."  How would you place your views on this scale, generally speaking?,” to which respondents code their answers on a scale from 1 to 10 where 1 is “Left” and 10 is “Right.”  Both of these variables are discrete, meaning there are only a finite number of values that they each could take.  In analyzing this data, my research design is observational (although neither a person's religion or ideology are directly observable), and specifically cross-sectional, meaning I'm looking into the outcomes (political ideology) of "treated" and "control" units based on level of religiosity (I also acknowledge that level of religiosity isn't really a treatment in the traditional sense, but within this research design, that is more or less the role it plays).
 
 ```{r, include=FALSE}
 library(tidyverse)
@@ -44,8 +46,6 @@ data_summary_plot <- WVS |>
   labs(x = "Political Ideology from Left (1) to Right (10)",
        y = "Number of Responses")
 data_summary_plot
-
-summary(WVS$Q240)
 ```
 
 
@@ -60,11 +60,6 @@ religion_politics_plot <- ggplot(WVS,
        x = "Spectrum of Political Ideology from Left (1) to Right (10)",
        y = "Proportion")
 religion_politics_plot
-  
-## change values on x-axis to 1-10; specify what "proportion" means
-
-## Q6 = how important is religion, Q173 = religious person?
-## Q240 = left-right political scale
 ```
 
 ```{r, echo=FALSE}
@@ -81,21 +76,13 @@ tbl_regression(model1)
 
 In this regression, `Atheist` is chosen as the base category; thus, holding age and gender constant, and as compared to atheists, people who self-describe as "not religious" are on average 0.58 further in the conservative direction on a scale of 1-10 (where 1 = left-wing and 10 = right-wing), and people who self-describe as "religious" are an average of 1 point further than atheists in the conservative direction.  Both of these effects are significant at the p<0.001 level.  These trends are reflected in the figure above, as there is a higher frequency of 9s and 10s (people at the far end of the spectrum towards right-wing ideology) on the scale for people in the religious category than in the "atheist" or "non-religious" categories.
 
-Additionally, as compared to atheists and when holding religiosity and age constant, gender results in 0.12 towards liberalism for women as compared to men, also significant at the p<0.001 level.  And when holding gender and religiosity constant, the effect of age is negligible on political ideology with a p-value of >0.9.  For this table, I looked up the documentation of the `gtsummary` package and used the function `tbl_regression`.
+Additionally, as compared to atheists and when holding religiosity and age constant, gender results in an average 0.12 shift towards the left for women as compared to men, also significant at the p<0.001 level.  Lastly, when holding gender and religiosity constant, the effect of age is negligible on political ideology with a p-value of >0.9.  For this table, I looked up the documentation of the `gtsummary` package and used the function `tbl_regression`.
+
+There's a lot of nuance regarding an answer to the question of causality with this study.  As both religion and political ideology are generally considered intrinsic and not necessarily subject to change from any external source (i.e. there is no reasonable way to fully attribute a person's political ideology to any other one factor in their life, including religion), it would be extremely difficult to try to ascertain a an effect that could plausibly be understood as causal.  In other words, as alluded to above, as this can't really be understood as a normal "treatment," it also can't be understood in the context of a normal treatment effect.  Thus, the strongest statement I can reasonably make regarding my results is that there does appear to be an association between higher levels of self-reported religion and more conservative beliefs.
+
 
 ## Conclusion
 
+In conclusion, my results indicate that there is an association between higher levels of self-reported religion and more conservative beliefs when controlling for gender and age, with a self-description of "not religious" associated with being an average of 0.58 further towards the right on a 10-point scale as compared to those who identified as "atheists," and a self-description of "religious" associated with being an average of 1 point further towards the right on the same scale as compared to atheists.  Thus, my hypothesis is generally supported by these results even without certainty about causality.  Additionally, being a woman is associated with being an average of 0.12 further towards the left on the 10-point political ideology scale, and age appears to have no statistically significant effect.  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Yet, there are limitations to every study, and some potential limitations for this analysis include the potential for various types of biases to have added some degree of systematic error to my results; social desirability bias, for example, could have played a role in how people responded to questions of both religion and ideology in countries where viewpoints that diverge from the accepted ones on sensitive topics like these might feel dangerous to express - I can even imagine people being less likely to report conservative beliefs (and maybe even strong religious beliefs) in the US, where we generally claim to have freedom of belief.  Confounders (other than gender and age, which I controlled for in the multiple regression above) also have the potential to exist in this analysis; for example, the capacity of a specific religion to affect both someone's level of personal religious devotion and their political ideology.  Another threat to inference here might be unmeasured confounding, as we can only control for observed variables, and these are already such complex personal preferences that it would be impossible to observe (let alone control for) all of the potential variables that contribute to these individual beliefs.  Nevertheless, one way this analysis could be improved might be by employing subclassification to remove some potential confounders (i.e. controlling for specific religions or regions). ... ONE MORE?
